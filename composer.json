@@ -1,0 +1,21 @@
+{
+    "name": "slim/strong",
+    "type": "library",
+    "description": "Slim Framework Authentication Library",
+    "keywords": ["authentication","extensions"],
+    "homepage": "http://github.com/silentworks/Strong",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrew Smith",
+            "email": "a.smith@silentworks.co.uk",
+            "homepage": "http://www.silentworks.co.uk/"
+        }
+    ],
+    "require": {
+        "php": ">=5.2.0"
+    },
+    "autoload": {
+        "psr-0": { "Strong_": "Strong/" }
+    }
+}
