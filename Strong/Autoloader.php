@@ -4,7 +4,6 @@
  * Strong Authentication Library
  *
  * User authentication and authorization library
- * note: Some functionality were taken from KohanaPHP Auth library
  *
  * @license     MIT Licence
  * @category    Libraries

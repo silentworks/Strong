@@ -6,24 +6,22 @@ if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50200)
  * Strong Authentication Library
  *
  * User authentication and authorization library
- * note: Some functionality were taken from KohanaPHP Auth library
  *
  * @license     MIT Licence
  * @category    Libraries
  * @author      Andrew Smith
  * @link        http://www.silentworks.co.uk
  * @copyright   Copyright (c) 2012, Andrew Smith.
- * @since       1.0.0
  * @version     1.0.0
  */
 
 class Strong_Auth
 {
-    // Slim Log instance
-    protected $log;
-
     // Configuration
-    protected $config;
+    protected $config = array(
+        'name' => 'default',
+        'driver' => 'PDO',
+    );
 
     /**
      * @const string
@@ -38,37 +36,33 @@ class Strong_Auth
     // Drivers
     protected $driver;
 
-    public static function factory($config = array()) {
-        return new Strong($config);
+    public static function factory($config = array())
+    {
+        return new Strong_Auth($config);
     }
 
-    public static function instance($name = 'default') {
-        return isset(self::$apps[(string)$name]) ? self::$apps[(string)$name] : null;
+    public static function instance($name = 'default')
+    {
+        return self::$apps[$name];
     }
 
-    public function __construct($config = array()) {
-        // Slim Instance Name
-        $instance_name = isset($config['slim.instance']) ? $config['slim.instance'] : 'default';
-
-        // Load Instance of Slim log
-        $this->log = Slim::getInstance($instance_name)->getLog();
-
+    public function __construct($config = array())
+    {
         // Save the config in gloabal variable
-        $this->config = $config;
+        $this->config = array_merge($this->config, $config);
 
         // Set the driver class name
-        $driver = 'Strong_Driver_' . $config['driver'];
+        $driver = 'Strong_Driver_' . $this->config['driver'];
 
-        if (!class_exists($driver)) {
-            $this->log->error('Strong is missing driver' . $config['driver'] . ' in ' . get_class($this));
-            Slim::handleErrors(4, 'Strong is missing driver ' . $config['driver'] . ' in ' . get_class($this), __FILE__, 73);
+        if ( !class_exists($driver)) {
+            throw new Exception('Strong is missing driver ' . $this->config['driver'] . ' in ' . get_class($this));
         }
 
         // Load the driver
-        $driver = new $driver($config);
+        $driver = new $driver($this->config);
 
-        if (!($driver instanceof Strong_Driver)) {
-            $this->log->error('The current Driver ' . $config['driver'] . ' is not a instance of ' . get_class($this));
+        if ( !($driver instanceof Strong_Driver)) {
+            throw new Exception('The current Driver ' . $this->config['driver'] . ' is not a instance of ' . get_class($this));
         }
 
         // Load the driver for access
@@ -78,36 +72,39 @@ class Strong_Auth
         if ( !isset(self::$apps['default']) ) {
             $this->setName('default');
         }
-
-        $this->log->debug('Strong Library loaded');
     }
 
-    public function logged_in() {
-        return $this->driver->logged_in();
+    public function loggedIn()
+    {
+        return $this->driver->loggedIn();
     }
 
-    public function login($username_or_email, $password, $remember = FALSE) {
+    public function login($usernameOrEmail, $password, $remember = false)
+    {
         if (empty($password)) {
-            return FALSE;
+            return false;
         }
 
         if (is_string($password)) {
-            $password = $this->hash_password($password);
+            $password = $this->driver->hashPassword($password);
         }
 
-        return $this->driver->login($username_or_email, $password, $remember);
+        return $this->driver->login($usernameOrEmail, $password, $remember);
     }
 
-    public function auto_login() {
-        return $this->driver->auto_login();
+    public function autoLogin()
+    {
+        return $this->driver->autoLogin();
     }
 
-    public function logout($destroy = FALSE) {
+    public function logout($destroy = false)
+    {
         return $this->driver->logout($destroy);
     }
 
-    public function get_user() {
-        return $this->driver->get_user();
+    public function getUser()
+    {
+        return $this->driver->getUser();
     }
 
     /**
@@ -115,23 +112,14 @@ class Strong_Auth
      * @param string $name The name of this Strong application
      * @return void
      */
-    public function setName( $name ) {
+    public function setName($name)
+    {
         $this->name = $name;
         self::$apps[$name] = $this;
     }
 
-    /**
-     * Get Strong application name
-     * @return string|null
-     */
-    public function getName() {
-        return $this->name;
-    }
-
-    public function hash_password($plain_text) {
-        $site_key = isset($this->config['site_key']) ? $this->config['site_key'] : '0ca232f94c7bbe5251c5811f1d7df9d474a5576c6698dec5e';
-        $nonce = isset($this->config['nonce']) ? $this->config['nonce'] : 'd5b81f75d61b52555beb9cc61491ba8746b91cbfb9a2a9cdc';
-
-        return hash_hmac('sha512', $plain_text . $nonce, $site_key);
+    public function getDriver()
+    {
+        return $this->driver;
     }
 }
