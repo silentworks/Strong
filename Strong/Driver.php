@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Strong Authentication Library
  *
@@ -10,14 +9,22 @@
  * @author      Andrew Smith
  * @link        http://www.silentworks.co.uk
  * @copyright   Copyright (c) 2012, Andrew Smith.
- * @since       1.0.0
- * @version     1.0.0
+ * @since       0.1.0
+ * @version     0.5.0
  */
 abstract class Strong_Driver
 {
-    // Configuration
+    /**
+     * @var array
+     */
     protected $config;
 
+    /**
+     * Initalize the driver and start session if
+     * one is not already started.
+     * 
+     * @param array $config 
+     */
     public function __construct(array $config) {
         // Load Session
         if(session_id() === "") {
@@ -28,16 +35,30 @@ abstract class Strong_Driver
         $this->config = $config;
     }
 
-    public function loggedIn() {
-        return $this->driver->loggedIn();
-    }
+    /**
+     * User login check based on driver
+     * 
+     * @return booleon
+     */
+    abstract public function loggedIn();
 
-    abstract public function login($usernameOrEmail, $password, $remember);
+    /**
+     * To authenticate user based on username or email
+     * and password
+     * 
+     * @param string $usernameOrEmail 
+     * @param string $password 
+     * @return booleon
+     */
+    abstract public function login($usernameOrEmail, $password);
 
-    public function autoLogin() {
-        return FALSE;
-    }
-
+    /**
+     * Log user out by deleting session key values or
+     * deleting the session completely
+     * 
+     * @param booleon $destroy 
+     * @return booleon
+     */
     public function logout($destroy = FALSE) {
         if ($destroy === TRUE) {
             // Destroy the session completely
@@ -51,12 +72,23 @@ abstract class Strong_Driver
         return !$this->loggedIn();
     }
 
+    /**
+     * Get the users details stored in Session
+     * 
+     * @return array
+     */
     public function getUser() {
         if(isset($_SESSION['auth_user']) && !empty($_SESSION['auth_user'])){
             return $_SESSION['auth_user'];
         }
     }
 
+    /**
+     * Login and store user details in Session
+     * 
+     * @param array $user 
+     * @return booleon
+     */
     protected function completeLogin($user) {
         // Store session data
         $_SESSION['auth_user'] = $user;
