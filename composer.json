@@ -1,7 +1,7 @@
 {
-    "name": "slim/strong",
+    "name": "strong/strong",
     "type": "library",
-    "description": "Slim Framework Authentication Library",
+    "description": "Authentication Library with multiple drivers",
     "keywords": ["authentication","extensions"],
     "homepage": "http://github.com/silentworks/Strong",
     "license": "MIT",

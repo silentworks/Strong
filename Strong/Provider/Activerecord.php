@@ -12,10 +12,10 @@
  * @copyright   Copyright (c) 2012, Andrew Smith.
  * @version     1.0.0
  */
-class Strong_Driver_Activerecord extends Strong_Driver
+class Strong_Provider_Activerecord extends Strong_Provider
 {
     /**
-     * User login check based on driver
+     * User login check based on provider
      * 
      * @return booleon
      */
@@ -40,7 +40,7 @@ class Strong_Driver_Activerecord extends Strong_Driver
             return $this->completeLogin($user);
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -59,7 +59,7 @@ class Strong_Driver_Activerecord extends Strong_Driver
             'id' => $user->id,
             'username' => $user->username,
             'email' => $user->email,
-            'logged_in' => TRUE
+            'logged_in' => true
         );
 
         return parent::completeLogin($userInfo);

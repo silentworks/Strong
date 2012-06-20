@@ -11,7 +11,7 @@
  * @copyright   Copyright (c) 2012, Andrew Smith.
  * @version     1.0.0
  */
-class Strong_Driver_PDO extends Strong_Driver
+class Strong_Provider_PDO extends Strong_Provider
 {
     /**
      * @var array
@@ -41,7 +41,7 @@ class Strong_Driver_PDO extends Strong_Driver
     }
 
     /**
-     * User login check based on driver
+     * User login check based on provider
      * 
      * @return booleon
      */

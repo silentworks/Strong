@@ -12,7 +12,7 @@
  * @since       0.1.0
  * @version     0.5.0
  */
-abstract class Strong_Driver
+abstract class Strong_Provider
 {
     /**
      * @var array
@@ -20,7 +20,7 @@ abstract class Strong_Driver
     protected $config;
 
     /**
-     * Initalize the driver and start session if
+     * Initalize the provider and start session if
      * one is not already started.
      * 
      * @param array $config 
@@ -36,7 +36,7 @@ abstract class Strong_Driver
     }
 
     /**
-     * User login check based on driver
+     * User login check based on provider
      * 
      * @return booleon
      */
@@ -59,8 +59,8 @@ abstract class Strong_Driver
      * @param booleon $destroy 
      * @return booleon
      */
-    public function logout($destroy = FALSE) {
-        if ($destroy === TRUE) {
+    public function logout($destroy = false) {
+        if ($destroy === true) {
             // Destroy the session completely
             session_destroy();
         } else {
@@ -92,6 +92,6 @@ abstract class Strong_Driver
     protected function completeLogin($user) {
         // Store session data
         $_SESSION['auth_user'] = $user;
-        return TRUE;
+        return true;
     }
 }

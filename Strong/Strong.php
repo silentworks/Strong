@@ -24,7 +24,7 @@ class Strong
      */
     protected $config = array(
         'name' => 'default',
-        'driver' => 'PDO',
+        'provider' => 'PDO',
     );
 
     /**
@@ -38,9 +38,9 @@ class Strong
     protected static $apps = array();
 
     /**
-     * @var Strong_Driver
+     * @var Strong_Provider
      */
-    protected $driver;
+    protected $provider;
 
     /**
      * Autoloader to get all Strong related classes
@@ -91,22 +91,22 @@ class Strong
         // Save the config in gloabal variable
         $this->config = array_merge($this->config, $config);
 
-        // Set the driver class name
-        $driver = 'Strong_Driver_' . $this->config['driver'];
+        // Set the provider class name
+        $provider = 'Strong_Provider_' . $this->config['provider'];
         
-        if ( !class_exists($driver)) {
-            throw new Exception('Strong is missing driver ' . $this->config['driver'] . ' in ' . get_class($this));
+        if ( !class_exists($provider)) {
+            throw new Exception('Strong is missing provider ' . $this->config['provider'] . ' in ' . get_class($this));
         }
 
-        // Load the driver
-        $driver = new $driver($this->config);
+        // Load the provider
+        $provider = new $provider($this->config);
 
-        if ( !($driver instanceof Strong_Driver)) {
-            throw new Exception('The current Driver ' . $this->config['driver'] . ' is not a instance of ' . get_class($this));
+        if ( !($provider instanceof Strong_Provider)) {
+            throw new Exception('The current Provider ' . $this->config['provider'] . ' is not a instance of ' . get_class($this));
         }
 
-        // Load the driver for access
-        $this->driver = $driver;
+        // Load the provider for access
+        $this->provider = $provider;
 
         //Set app name
         if ( !isset(self::$apps[$this->config['name']]) ) {
@@ -115,13 +115,13 @@ class Strong
     }
 
     /**
-     * User login check based on driver
+     * User login check based on provider
      * 
      * @return booleon
      */
     public function loggedIn()
     {
-        return $this->driver->loggedIn();
+        return $this->provider->loggedIn();
     }
 
     public static function protect($name = 'default')
@@ -147,10 +147,10 @@ class Strong
         }
 
         if (is_string($password)) {
-            $password = $this->driver->hashPassword($password);
+            $password = $this->provider->hashPassword($password);
         }
 
-        return $this->driver->login($usernameOrEmail, $password, $remember);
+        return $this->provider->login($usernameOrEmail, $password, $remember);
     }
 
     /**
@@ -162,7 +162,7 @@ class Strong
      */
     public function logout($destroy = false)
     {
-        return $this->driver->logout($destroy);
+        return $this->provider->logout($destroy);
     }
 
     /**
@@ -172,7 +172,7 @@ class Strong
      */
     public function getUser()
     {
-        return $this->driver->getUser();
+        return $this->provider->getUser();
     }
 
     /**
@@ -188,12 +188,12 @@ class Strong
     }
 
     /**
-     * Get the Driver class being used specifically
+     * Get the Provider class being used specifically
      * 
-     * @return Strong_Driver
+     * @return Strong_Provider
      */
-    public function getDriver()
+    public function getProvider()
     {
-        return $this->driver;
+        return $this->provider;
     }
 }
