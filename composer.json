@@ -1,5 +1,5 @@
 {
-    "name": "strong/strong",
+    "name": "slim/strong",
     "type": "library",
     "description": "Authentication Library with multiple drivers",
     "keywords": ["authentication","extensions"],
