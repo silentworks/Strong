@@ -9,8 +9,7 @@
  * @author      Andrew Smith
  * @link        http://www.silentworks.co.uk
  * @copyright   Copyright (c) 2012, Andrew Smith.
- * @since       0.1.0
- * @version     0.5.0
+ * @version     1.0.0
  */
 abstract class Strong_Provider
 {
@@ -75,12 +74,13 @@ abstract class Strong_Provider
     /**
      * Get the users details stored in Session
      * 
-     * @return array
+     * @return array|null
      */
     public function getUser() {
         if(isset($_SESSION['auth_user']) && !empty($_SESSION['auth_user'])){
             return $_SESSION['auth_user'];
         }
+        return null;
     }
 
     /**

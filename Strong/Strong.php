@@ -70,13 +70,13 @@ class Strong
     }
 
     /**
-     * Get and existing instance of Strong using a
+     * Get an existing instance of Strong using a
      * static method
      * 
      * @param string $name 
      * @return Strong
      */
-    public static function instance($name = 'default')
+    public static function getInstance($name = 'default')
     {
         return self::$apps[$name];
     }
@@ -89,7 +89,7 @@ class Strong
     public function __construct($config = array())
     {
         // Save the config in gloabal variable
-        $this->config = array_merge($this->config, $config);
+        $this->setConfig($config);
 
         // Set the provider class name
         $provider = 'Strong_Provider_' . $this->config['provider'];
@@ -102,7 +102,7 @@ class Strong
         $provider = new $provider($this->config);
 
         if ( !($provider instanceof Strong_Provider)) {
-            throw new Exception('The current Provider ' . $this->config['provider'] . ' is not a instance of ' . get_class($this));
+            throw new Exception('The current Provider ' . $this->config['provider'] . ' does not extend Strong_Provider');
         }
 
         // Load the provider for access
@@ -124,9 +124,14 @@ class Strong
         return $this->provider->loggedIn();
     }
 
+    /**
+     * Protect a page, route, controller, url
+     * @param string $name 
+     * @return booleon
+     */
     public static function protect($name = 'default')
     {
-        if ( ! Strong::instance($name)->loggedIn()) {
+        if ( ! Strong::getInstance($name)->loggedIn()) {
             return false;
         }
         return true;
@@ -138,6 +143,7 @@ class Strong
      * 
      * @param string $usernameOrEmail 
      * @param string $password 
+     * @param booleon $remember
      * @return booleon
      */
     public function login($usernameOrEmail, $password, $remember = false)
@@ -146,10 +152,10 @@ class Strong
             return false;
         }
 
-        if (is_string($password)) {
+        if (method_exists($this->provider, 'hashPassword') && is_string($password)) {
             $password = $this->provider->hashPassword($password);
         }
-
+        
         return $this->provider->login($usernameOrEmail, $password, $remember);
     }
 
@@ -185,6 +191,17 @@ class Strong
     {
         $this->name = $name;
         self::$apps[$name] = $this;
+    }
+
+    /**
+     * Set Config for Strong Auth
+     * @param array $config 
+     * @return Strong
+     */
+    public function setConfig($config = array())
+    {
+        $this->config = array_merge($this->config, $config);
+        return $this;
     }
 
     /**
