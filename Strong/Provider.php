@@ -37,7 +37,7 @@ abstract class Strong_Provider
     /**
      * User login check based on provider
      * 
-     * @return booleon
+     * @return boolean
      */
     abstract public function loggedIn();
 
@@ -47,7 +47,7 @@ abstract class Strong_Provider
      * 
      * @param string $usernameOrEmail 
      * @param string $password 
-     * @return booleon
+     * @return boolean
      */
     abstract public function login($usernameOrEmail, $password);
 
@@ -55,8 +55,8 @@ abstract class Strong_Provider
      * Log user out by deleting session key values or
      * deleting the session completely
      * 
-     * @param booleon $destroy 
-     * @return booleon
+     * @param boolean $destroy 
+     * @return boolean
      */
     public function logout($destroy = false) {
         if ($destroy === true) {
@@ -87,7 +87,7 @@ abstract class Strong_Provider
      * Login and store user details in Session
      * 
      * @param array $user 
-     * @return booleon
+     * @return boolean
      */
     protected function completeLogin($user) {
         // Store session data

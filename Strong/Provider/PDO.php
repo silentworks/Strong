@@ -43,7 +43,7 @@ class Strong_Provider_PDO extends Strong_Provider
     /**
      * User login check based on provider
      * 
-     * @return booleon
+     * @return boolean
      */
     public function loggedIn()
     {
@@ -56,7 +56,7 @@ class Strong_Provider_PDO extends Strong_Provider
      * 
      * @param string $usernameOrEmail 
      * @param string $password 
-     * @return booleon
+     * @return boolean
      */
     public function login($usernameOrEmail, $password)
     {
@@ -86,7 +86,7 @@ class Strong_Provider_PDO extends Strong_Provider
      * Login and store user details in Session
      * 
      * @param object $user 
-     * @return booleon
+     * @return boolean
      */
     protected function completeLogin($user)
     {

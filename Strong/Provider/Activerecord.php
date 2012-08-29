@@ -16,7 +16,7 @@ class Strong_Provider_Activerecord extends Strong_Provider
     /**
      * User login check based on provider
      * 
-     * @return booleon
+     * @return boolean
      */
     public function loggedIn() {
         return (isset($_SESSION['auth_user']) && !empty($_SESSION['auth_user']));
@@ -28,7 +28,7 @@ class Strong_Provider_Activerecord extends Strong_Provider
      * 
      * @param string $usernameOrEmail 
      * @param string $password 
-     * @return booleon
+     * @return boolean
      */
     public function login($usernameOrEmail, $password) {
         if(! is_object($usernameOrEmail)) {
@@ -46,7 +46,7 @@ class Strong_Provider_Activerecord extends Strong_Provider
      * Login and store user details in Session
      * 
      * @param array $user 
-     * @return booleon
+     * @return boolean
      */
     protected function completeLogin($user) {
         $users = User::find($user->id);

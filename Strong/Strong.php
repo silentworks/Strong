@@ -117,7 +117,7 @@ class Strong
     /**
      * User login check based on provider
      * 
-     * @return booleon
+     * @return boolean
      */
     public function loggedIn()
     {
@@ -127,7 +127,7 @@ class Strong
     /**
      * Protect a page, route, controller, url
      * @param string $name 
-     * @return booleon
+     * @return boolean
      */
     public static function protect($name = 'default')
     {
@@ -143,8 +143,8 @@ class Strong
      * 
      * @param string $usernameOrEmail 
      * @param string $password 
-     * @param booleon $remember
-     * @return booleon
+     * @param boolean $remember
+     * @return boolean
      */
     public function login($usernameOrEmail, $password, $remember = false)
     {
@@ -163,8 +163,8 @@ class Strong
      * Log user out by deleting session key values or
      * deleting the session completely
      * 
-     * @param booleon $destroy 
-     * @return booleon
+     * @param boolean $destroy 
+     * @return boolean
      */
     public function logout($destroy = false)
     {
@@ -191,6 +191,16 @@ class Strong
     {
         $this->name = $name;
         self::$apps[$name] = $this;
+    }
+
+    /**
+     * Get Strong application name
+     *
+     * @return string|null
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
