@@ -11,11 +11,14 @@
  * @copyright   Copyright (c) 2012, Andrew Smith.
  * @version     1.0.0
  */
-class Strong_Provider_Activerecord extends Strong_Provider
+
+namespace Strong\Provider;
+
+class Activerecord extends \Strong\Provider
 {
     /**
      * User login check based on provider
-     * 
+     *
      * @return boolean
      */
     public function loggedIn() {
@@ -25,14 +28,14 @@ class Strong_Provider_Activerecord extends Strong_Provider
     /**
      * To authenticate user based on username or email
      * and password
-     * 
-     * @param string $usernameOrEmail 
-     * @param string $password 
+     *
+     * @param string $usernameOrEmail
+     * @param string $password
      * @return boolean
      */
     public function login($usernameOrEmail, $password) {
         if(! is_object($usernameOrEmail)) {
-            $user = User::find_by_username_or_email($usernameOrEmail, $usernameOrEmail);
+            $user = \User::find_by_username_or_email($usernameOrEmail, $usernameOrEmail);
         }
 
         if(($user->email === $usernameOrEmail || $user->username === $usernameOrEmail) && $user->password === $password) {
@@ -44,12 +47,12 @@ class Strong_Provider_Activerecord extends Strong_Provider
 
     /**
      * Login and store user details in Session
-     * 
-     * @param array $user 
+     *
+     * @param array $user
      * @return boolean
      */
     protected function completeLogin($user) {
-        $users = User::find($user->id);
+        $users = \User::find($user->id);
         $users->logins = $user->logins + 1;
         $users->last_login = time();
         $users->save();

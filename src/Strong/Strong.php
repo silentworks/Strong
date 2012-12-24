@@ -1,9 +1,4 @@
 <?php
-if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50200)
-    die('Strong requires PHP 5.2 or higher');
-
-spl_autoload_register(array('Strong', 'autoload'));
-
 /**
  * Strong Authentication Library
  *
@@ -16,6 +11,8 @@ spl_autoload_register(array('Strong', 'autoload'));
  * @copyright   Copyright (c) 2012, Andrew Smith.
  * @version     1.0.0
  */
+
+namespace Strong;
 
 class Strong
 {
@@ -43,37 +40,21 @@ class Strong
     protected $provider;
 
     /**
-     * Autoloader to get all Strong related classes
-     * 
-     * @param string $class
-     */
-    public static function autoload($class)
-    {
-        if (0 !== strpos($class, 'Strong')) {
-            return;
-        }
-        $file = dirname(__FILE__) . '/' . str_replace('_', DIRECTORY_SEPARATOR, substr($class,7)) . '.php';
-        if (is_file($file)) {
-            require $file;
-        }
-    }
-
-    /**
      * Factory method to call Strong and initalize
-     * 
-     * @param array $config 
+     *
+     * @param array $config
      * @return Strong
      */
     public static function factory($config = array())
     {
-        return new Strong($config);
+        return new self($config);
     }
 
     /**
      * Get an existing instance of Strong using a
      * static method
-     * 
-     * @param string $name 
+     *
+     * @param string $name
      * @return Strong
      */
     public static function getInstance($name = 'default')
@@ -83,8 +64,8 @@ class Strong
 
     /**
      * Instantiate Strong and provide config for your settings
-     * 
-     * @param array $config 
+     *
+     * @param array $config
      */
     public function __construct($config = array())
     {
@@ -92,17 +73,17 @@ class Strong
         $this->setConfig($config);
 
         // Set the provider class name
-        $provider = 'Strong_Provider_' . $this->config['provider'];
-        
+        $provider = '\\Strong\\Provider\\' . $this->config['provider'];
+
         if ( !class_exists($provider)) {
-            throw new Exception('Strong is missing provider ' . $this->config['provider'] . ' in ' . get_class($this));
+            throw new \Exception('Strong is missing provider ' . $this->config['provider'] . ' in ' . get_class($this));
         }
 
         // Load the provider
         $provider = new $provider($this->config);
 
-        if ( !($provider instanceof Strong_Provider)) {
-            throw new Exception('The current Provider ' . $this->config['provider'] . ' does not extend Strong_Provider');
+        if ( !($provider instanceof \Strong\Provider)) {
+            throw new \Exception('The current Provider ' . $this->config['provider'] . ' does not extend \Strong\Provider');
         }
 
         // Load the provider for access
@@ -116,7 +97,7 @@ class Strong
 
     /**
      * User login check based on provider
-     * 
+     *
      * @return boolean
      */
     public function loggedIn()
@@ -126,7 +107,7 @@ class Strong
 
     /**
      * Protect a page, route, controller, url
-     * @param string $name 
+     * @param string $name
      * @return boolean
      */
     public static function protect($name = 'default')
@@ -140,9 +121,9 @@ class Strong
     /**
      * To authenticate user based on username or email
      * and password
-     * 
-     * @param string $usernameOrEmail 
-     * @param string $password 
+     *
+     * @param string $usernameOrEmail
+     * @param string $password
      * @param boolean $remember
      * @return boolean
      */
@@ -155,15 +136,15 @@ class Strong
         if (method_exists($this->provider, 'hashPassword') && is_string($password)) {
             $password = $this->provider->hashPassword($password);
         }
-        
+
         return $this->provider->login($usernameOrEmail, $password, $remember);
     }
 
     /**
      * Log user out by deleting session key values or
      * deleting the session completely
-     * 
-     * @param boolean $destroy 
+     *
+     * @param boolean $destroy
      * @return boolean
      */
     public function logout($destroy = false)
@@ -173,7 +154,7 @@ class Strong
 
     /**
      * Get the users details stored in Session
-     * 
+     *
      * @return array
      */
     public function getUser()
@@ -183,7 +164,7 @@ class Strong
 
     /**
      * Set Strong application name
-     * 
+     *
      * @param string $name
      * @return void
      */
@@ -205,7 +186,7 @@ class Strong
 
     /**
      * Set Config for Strong Auth
-     * @param array $config 
+     * @param array $config
      * @return Strong
      */
     public function setConfig($config = array())
@@ -216,7 +197,7 @@ class Strong
 
     /**
      * Get the Provider class being used specifically
-     * 
+     *
      * @return Strong_Provider
      */
     public function getProvider()
