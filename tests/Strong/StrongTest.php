@@ -71,6 +71,7 @@ class Strong_StrongTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testGetUser() {
+        $_SESSION['auth_user'] = null;
         $user = Strong::factory(array('provider' => 'mock'))->getUser();
         $this->assertEquals('', $user);
     }

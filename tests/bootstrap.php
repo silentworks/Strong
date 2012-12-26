@@ -5,4 +5,5 @@ date_default_timezone_set('Europe/Warsaw');
 
 require 'vendor/autoload.php';
 require 'tests/Mock/ProviderMock.php';
+require 'tests/Mock/ProviderAbstractMock.php';
 require 'tests/Mock/ProviderInvalid.php';
