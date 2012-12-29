@@ -6,7 +6,7 @@ class PDOMock extends PDO {
 
     }
 
-    public function prepare() {
+    public function prepare($statement, $options = NULL) {
         return new StmtMock();
     }
 }

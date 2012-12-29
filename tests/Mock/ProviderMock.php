@@ -19,7 +19,7 @@ class Mock extends \Strong\Provider {
         return ($usernameOrEmail === $password);
     }
 
-    public function logout() {
+    public function logout($destroy = false) {
         self::$logged = false;
     }
 
