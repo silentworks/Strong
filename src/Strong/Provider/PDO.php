@@ -29,6 +29,8 @@ class PDO extends \Strong\Provider
      * Initialize the PDO connection and merge user
      * config with defaults.
      *
+     * > Changes for depenencies injection! (PDO Connection)
+     *
      * @param array $config
      */
     public function __construct($config)
@@ -36,11 +38,10 @@ class PDO extends \Strong\Provider
         parent::__construct($config);
         $this->config = array_merge($this->settings, $this->config);
 
-        try {
-            $this->pdo = new PDO($this->config['dsn'], $this->config['dbuser'], $this->config['dbpass']);
-        } catch (\PDOException $e) {
-            throw new \Exception($e->getMessage());
-        }
+        if (!isset($this->config['pdo']) || !($this->config['pdo'] instanceof \PDO))
+            throw new \InvalidArgumentException('You must add valid pdo connection object');
+
+        $this->pdo = $this->config['pdo'];
     }
 
     /**
