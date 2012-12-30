@@ -11,7 +11,10 @@
  * @copyright   Copyright (c) 2012, Andrew Smith.
  * @version     1.0.0
  */
-class Strong_Provider_PDO extends Strong_Provider
+
+namespace Strong\Provider;
+
+class PDO extends \Strong\Provider
 {
     /**
      * @var array
@@ -23,9 +26,11 @@ class Strong_Provider_PDO extends Strong_Provider
     );
 
     /**
-     * Initialize the PDO connection and merge user 
+     * Initialize the PDO connection and merge user
      * config with defaults.
-     * 
+     *
+     * > Changes for depenencies injection! (PDO Connection)
+     *
      * @param array $config
      */
     public function __construct($config)
@@ -33,16 +38,15 @@ class Strong_Provider_PDO extends Strong_Provider
         parent::__construct($config);
         $this->config = array_merge($this->settings, $this->config);
 
-        try {
-            $this->pdo = new PDO($this->config['dsn'], $this->config['dbuser'], $this->config['dbpass']);
-        } catch (PDOException $e) {
-            throw new Exception($e->getMessage());
-        }
+        if (!isset($this->config['pdo']) || !($this->config['pdo'] instanceof \PDO))
+            throw new \InvalidArgumentException('You must add valid pdo connection object');
+
+        $this->pdo = $this->config['pdo'];
     }
 
     /**
      * User login check based on provider
-     * 
+     *
      * @return boolean
      */
     public function loggedIn()
@@ -53,9 +57,9 @@ class Strong_Provider_PDO extends Strong_Provider
     /**
      * To authenticate user based on username or email
      * and password
-     * 
-     * @param string $usernameOrEmail 
-     * @param string $password 
+     *
+     * @param string $usernameOrEmail
+     * @param string $password
      * @return boolean
      */
     public function login($usernameOrEmail, $password)
@@ -67,9 +71,9 @@ class Strong_Provider_PDO extends Strong_Provider
             $stmt->bindParam(':email', $usernameOrEmail);
             $stmt->execute();
 
-            $user = $stmt->fetch(PDO::FETCH_OBJ);
+            $user = $stmt->fetch(\PDO::FETCH_OBJ);
         }
-        
+
         if(is_object($user) && ($user->email === $usernameOrEmail || $user->username === $usernameOrEmail) && $user->password === $password) {
             return $this->completeLogin($user);
         }
@@ -84,8 +88,8 @@ class Strong_Provider_PDO extends Strong_Provider
 
     /**
      * Login and store user details in Session
-     * 
-     * @param object $user 
+     *
+     * @param object $user
      * @return boolean
      */
     protected function completeLogin($user)
