@@ -1,9 +1,9 @@
 {
-    "name": "jwest/strong",
+    "name": "slim/strong",
     "type": "library",
     "description": "Authentication Library with multiple drivers",
     "keywords": ["authentication","extensions"],
-    "homepage": "http://github.com/jwest/Strong",
+    "homepage": "http://github.com/silentworks/Strong",
     "license": "MIT",
     "authors": [
         {
