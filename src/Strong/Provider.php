@@ -11,7 +11,10 @@
  * @copyright   Copyright (c) 2012, Andrew Smith.
  * @version     1.0.0
  */
-abstract class Strong_Provider
+
+namespace Strong;
+
+abstract class Provider
 {
     /**
      * @var array
@@ -21,8 +24,8 @@ abstract class Strong_Provider
     /**
      * Initalize the provider and start session if
      * one is not already started.
-     * 
-     * @param array $config 
+     *
+     * @param array $config
      */
     public function __construct(array $config) {
         // Load Session
@@ -36,7 +39,7 @@ abstract class Strong_Provider
 
     /**
      * User login check based on provider
-     * 
+     *
      * @return boolean
      */
     abstract public function loggedIn();
@@ -44,9 +47,9 @@ abstract class Strong_Provider
     /**
      * To authenticate user based on username or email
      * and password
-     * 
-     * @param string $usernameOrEmail 
-     * @param string $password 
+     *
+     * @param string $usernameOrEmail
+     * @param string $password
      * @return boolean
      */
     abstract public function login($usernameOrEmail, $password);
@@ -54,8 +57,8 @@ abstract class Strong_Provider
     /**
      * Log user out by deleting session key values or
      * deleting the session completely
-     * 
-     * @param boolean $destroy 
+     *
+     * @param boolean $destroy
      * @return boolean
      */
     public function logout($destroy = false) {
@@ -73,7 +76,7 @@ abstract class Strong_Provider
 
     /**
      * Get the users details stored in Session
-     * 
+     *
      * @return array|null
      */
     public function getUser() {
@@ -85,8 +88,8 @@ abstract class Strong_Provider
 
     /**
      * Login and store user details in Session
-     * 
-     * @param array $user 
+     *
+     * @param array $user
      * @return boolean
      */
     protected function completeLogin($user) {

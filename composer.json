@@ -1,21 +1,26 @@
 {
-    "name": "slim/strong",
+    "name": "jwest/strong",
     "type": "library",
     "description": "Authentication Library with multiple drivers",
     "keywords": ["authentication","extensions"],
-    "homepage": "http://github.com/silentworks/Strong",
+    "homepage": "http://github.com/jwest/Strong",
     "license": "MIT",
     "authors": [
         {
             "name": "Andrew Smith",
             "email": "a.smith@silentworks.co.uk",
             "homepage": "http://www.silentworks.co.uk/"
+        },
+        {
+            "name": "Jakub Westfalewski",
+            "email": "jwest@jwest.pl",
+            "homepage": "http://jwest.pl/"
         }
     ],
     "require": {
-        "php": ">=5.2.0"
+        "php": ">=5.3.0"
     },
     "autoload": {
-        "psr-0": { "Strong": "Strong/" }
+        "psr-0": { "Strong": "src/" }
     }
 }
