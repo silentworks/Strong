@@ -8,20 +8,20 @@
  * @category    Libraries
  * @author      Andrew Smith
  * @link        http://www.silentworks.co.uk
- * @copyright   Copyright (c) 2012, Andrew Smith.
+ * @copyright   Copyright (c) 2013, Andrew Smith.
  * @version     1.0.0
  */
 
 namespace Strong\Provider;
 
-class PDO extends \Strong\Provider
+class ObjectContainer extends \Strong\Provider
 {
     /**
-     * Initialize the PDO connection and merge user
-     * config with defaults.
-     *
-     * > Changes for depenencies injection! (PDO Connection)
-     *
+     * @var object
+     */
+    protected $user;
+
+    /**
      * @param array $config
      * @throws \InvalidArgumentException
      */
@@ -30,11 +30,11 @@ class PDO extends \Strong\Provider
         parent::__construct($config);
         $this->config = array_merge($this->settings, $this->config);
 
-        if (!isset($this->config['pdo']) || !($this->config['pdo'] instanceof \PDO)) {
-            throw new \InvalidArgumentException('You must add valid pdo connection object');
+        if (!isset($this->config['user.class']) || ! is_object($this->config['user.class'])) {
+            throw new \InvalidArgumentException('You must add valid User Class object');
         }
 
-        $this->pdo = $this->config['pdo'];
+        $this->user = $this->config['user.class'];
     }
 
     /**
@@ -52,41 +52,20 @@ class PDO extends \Strong\Provider
      * and password
      *
      * @param string $usernameOrEmail
-     * @param string $hash
+     * @param string $password
      * @param bool $remember
      * @return boolean
      */
     public function login($usernameOrEmail, $password, $remember = false)
     {
-        if (!is_string($usernameOrEmail)) {
+        if (! is_string($usernameOrEmail)) {
             return false;
         }
 
-        $sql = "SELECT * FROM users WHERE username = :username OR email = :email";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':username', $usernameOrEmail);
-        $stmt->bindParam(':email', $usernameOrEmail);
-        $stmt->execute();
-
-        $user = $stmt->fetch(\PDO::FETCH_OBJ);
-
-        if (is_object($user) && ($user->email === $usernameOrEmail || $user->username === $usernameOrEmail)
-            && $this->hashVerify($password, $user->password)
-        ) {
-            return $this->completeLogin($user);
+        if (($this->user->email === $usernameOrEmail || $this->user->username === $usernameOrEmail)
+            && $this->hashVerify($password, $this->user->password)) {
+            return $this->completeLogin($this->user);
         }
-    }
-
-    /**
-     * Verify hashed password
-     *
-     * @param $password
-     * @param $hash
-     * @return bool
-     */
-    public function hashVerify($password, $hash)
-    {
-        return password_verify($password, $hash);
     }
 
     /**
@@ -108,13 +87,21 @@ class PDO extends \Strong\Provider
     }
 
     /**
-     * Password Hashing
-     *
      * @param $password
      * @return \false|string
      */
     public function hashPassword($password)
     {
         return password_hash($password, PASSWORD_BCRYPT);
+    }
+
+    /**
+     * @param $password
+     * @param $hash
+     * @return bool
+     */
+    public function hashVerify($password, $hash)
+    {
+        return password_verify($password, $hash);
     }
 }

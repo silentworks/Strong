@@ -17,27 +17,84 @@ namespace Strong;
 class Strong
 {
     /**
+     * @const string
+     */
+    const VERSION = '1.0.0';
+    /**
+     * @var array[Strong]
+     */
+    protected static $apps = array();
+    /**
      * @var array
      */
     protected $config = array(
         'name' => 'default',
         'provider' => 'PDO',
     );
-
-    /**
-     * @const string
-     */
-    const VERSION = '1.0.0';
-
-    /**
-     * @var array[Strong]
-     */
-    protected static $apps = array();
-
     /**
      * @var Strong_Provider
      */
     protected $provider;
+
+    /**
+     * Instantiate Strong and provide config for your settings
+     *
+     * @param array $config
+     * @throws \Exception
+     */
+    public function __construct($config = array())
+    {
+        // Save the config in gloabal variable
+        $this->setConfig($config);
+
+        // Set the provider class name
+        $provider = $this->config['provider'];
+
+        if (!is_object($this->config['provider'])) {
+            $provider = '\\Strong\\Provider\\' . $this->config['provider'];
+            if (!class_exists($provider)) {
+                throw new \Exception('Strong is missing provider ' . $provider . ' in ' . get_class($this));
+            }
+        }
+
+        // Load the provider
+        $provider = new $provider($this->config);
+
+        if (!($provider instanceof \Strong\Provider)) {
+            throw new \Exception('The current Provider ' . get_class($provider) . ' does not extend \Strong\Provider');
+        }
+
+        // Load the provider for access
+        $this->provider = $provider;
+
+        //Set app name
+        if (!isset(self::$apps[$this->config['name']])) {
+            $this->setName($this->config['name']);
+        }
+    }
+
+    /**
+     * Set Config for Strong Auth
+     * @param array $config
+     * @return Strong
+     */
+    public function setConfig($config = array())
+    {
+        $this->config = array_merge($this->config, $config);
+        return $this;
+    }
+
+    /**
+     * Set Strong application name
+     *
+     * @param string $name
+     * @return void
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        self::$apps[$name] = $this;
+    }
 
     /**
      * Factory method to call Strong and initalize
@@ -51,48 +108,16 @@ class Strong
     }
 
     /**
-     * Get an existing instance of Strong using a
-     * static method
-     *
+     * Protect a page, route, controller, url
      * @param string $name
-     * @return Strong
+     * @return boolean
      */
-    public static function getInstance($name = 'default')
+    public static function protect($name = 'default')
     {
-        return self::$apps[$name];
-    }
-
-    /**
-     * Instantiate Strong and provide config for your settings
-     *
-     * @param array $config
-     */
-    public function __construct($config = array())
-    {
-        // Save the config in gloabal variable
-        $this->setConfig($config);
-
-        // Set the provider class name
-        $provider = '\\Strong\\Provider\\' . $this->config['provider'];
-
-        if ( !class_exists($provider)) {
-            throw new \Exception('Strong is missing provider ' . $this->config['provider'] . ' in ' . get_class($this));
+        if (!Strong::getInstance($name)->loggedIn()) {
+            return false;
         }
-
-        // Load the provider
-        $provider = new $provider($this->config);
-
-        if ( !($provider instanceof \Strong\Provider)) {
-            throw new \Exception('The current Provider ' . $this->config['provider'] . ' does not extend \Strong\Provider');
-        }
-
-        // Load the provider for access
-        $this->provider = $provider;
-
-        //Set app name
-        if ( !isset(self::$apps[$this->config['name']]) ) {
-            $this->setName($this->config['name']);
-        }
+        return true;
     }
 
     /**
@@ -106,16 +131,15 @@ class Strong
     }
 
     /**
-     * Protect a page, route, controller, url
+     * Get an existing instance of Strong using a
+     * static method
+     *
      * @param string $name
-     * @return boolean
+     * @return Strong
      */
-    public static function protect($name = 'default')
+    public static function getInstance($name = 'default')
     {
-        if ( ! Strong::getInstance($name)->loggedIn()) {
-            return false;
-        }
-        return true;
+        return self::$apps[$name];
     }
 
     /**
@@ -133,11 +157,19 @@ class Strong
             return false;
         }
 
-        if (method_exists($this->provider, 'hashPassword') && is_string($password)) {
-            $password = $this->provider->hashPassword($password);
-        }
-
         return $this->provider->login($usernameOrEmail, $password, $remember);
+    }
+
+    /**
+     * @param $password
+     * @return bool
+     */
+    public function hashPassword($password)
+    {
+        if (method_exists($this->provider, 'hashPassword') && is_string($password)) {
+            return $this->provider->hashPassword($password);
+        }
+        return false;
     }
 
     /**
@@ -163,18 +195,6 @@ class Strong
     }
 
     /**
-     * Set Strong application name
-     *
-     * @param string $name
-     * @return void
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-        self::$apps[$name] = $this;
-    }
-
-    /**
      * Get Strong application name
      *
      * @return string|null
@@ -182,17 +202,6 @@ class Strong
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set Config for Strong Auth
-     * @param array $config
-     * @return Strong
-     */
-    public function setConfig($config = array())
-    {
-        $this->config = array_merge($this->config, $config);
-        return $this;
     }
 
     /**

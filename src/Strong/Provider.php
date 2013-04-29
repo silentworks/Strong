@@ -27,7 +27,7 @@ abstract class Provider
      *
      * @param array $config
      */
-    public function __construct(array $config) {
+    public function __construct(array $config = array()) {
         // Load Session
         if(session_id() === "") {
             session_start();
@@ -50,9 +50,10 @@ abstract class Provider
      *
      * @param string $usernameOrEmail
      * @param string $password
+     * @param $remember
      * @return boolean
      */
-    abstract public function login($usernameOrEmail, $password);
+    abstract public function login($usernameOrEmail, $password, $remember = false);
 
     /**
      * Log user out by deleting session key values or
@@ -90,11 +91,11 @@ abstract class Provider
      * Login and store user details in Session
      *
      * @param array $user
-     * @return boolean
+     * @return array
      */
     protected function completeLogin($user) {
         // Store session data
         $_SESSION['auth_user'] = $user;
-        return true;
+        return $user;
     }
 }

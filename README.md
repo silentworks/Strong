@@ -5,6 +5,9 @@
 ## Changes
 - pdo driver needs pdo object instead of a connection string
 - namespaces
+- hashPassword method available directly from Strong class instead of calling getProvider method first
+- password hash is now using [password_compat](https://github.com/ircmaxell/password_compat) dependency
+- providers can now be class instance rather than just a string
 
 ## Installing with Composer
 
@@ -16,7 +19,7 @@ Create a composer.json file in your project root:
 
     {
         "require": {
-            "slim/strong": "*"
+            "slim/strong": "dev-master"
         }
     }
 

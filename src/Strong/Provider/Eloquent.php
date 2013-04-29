@@ -8,13 +8,13 @@
  * @category    Libraries
  * @author      Andrew Smith
  * @link        http://www.silentworks.co.uk
- * @copyright   Copyright (c) 2012, Andrew Smith.
+ * @copyright   Copyright (c) 2013, Andrew Smith.
  * @version     1.0.0
  */
 
 namespace Strong\Provider;
 
-class Activerecord extends \Strong\Provider
+class Eloquent extends \Strong\Provider
 {
     /**
      * User login check based on provider
@@ -33,7 +33,7 @@ class Activerecord extends \Strong\Provider
      * @param string $usernameOrEmail
      * @param string $password
      * @param bool $remember
-     * @return array
+     * @return boolean
      */
     public function login($usernameOrEmail, $password, $remember = false)
     {
@@ -41,10 +41,11 @@ class Activerecord extends \Strong\Provider
             return false;
         }
 
-        $user = \User::find_by_username_or_email($usernameOrEmail, $usernameOrEmail);
+        $user = \User::where('username', $usernameOrEmail)
+            ->orWhere('email', $usernameOrEmail);
 
         if (($user->email === $usernameOrEmail || $user->username === $usernameOrEmail)
-            && $user->password === $password) {
+            && $this->hashVerify($password, $user->password)) {
             return $this->completeLogin($user);
         }
     }
@@ -52,7 +53,7 @@ class Activerecord extends \Strong\Provider
     /**
      * Login and store user details in Session
      *
-     * @param object $user
+     * @param \User $user
      * @return array
      */
     protected function completeLogin($user)
@@ -70,5 +71,24 @@ class Activerecord extends \Strong\Provider
         );
 
         return parent::completeLogin($userInfo);
+    }
+
+    /**
+     * @param $password
+     * @return \false|string
+     */
+    public function hashPassword($password)
+    {
+        return password_hash($password, PASSWORD_BCRYPT);
+    }
+
+    /**
+     * @param $password
+     * @param $hash
+     * @return bool
+     */
+    public function hashVerify($password, $hash)
+    {
+        return password_verify($password, $hash);
     }
 }
