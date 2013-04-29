@@ -14,7 +14,7 @@ class Mock extends \Strong\Provider {
         return self::$logged;
     }
 
-    public function login($usernameOrEmail, $password) {
+    public function login($usernameOrEmail, $password, $remember = false) {
         self::$logged = ($usernameOrEmail === $password);
         return ($usernameOrEmail === $password);
     }

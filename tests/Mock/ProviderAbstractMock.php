@@ -8,7 +8,7 @@ class AbstractMock extends \Strong\Provider {
         return isset($_SESSION['auth_user']);
     }
 
-    public function login($usernameOrEmail, $password) {
+    public function login($usernameOrEmail, $password, $remember = false) {
         $this->completeLogin('test');
     }
 

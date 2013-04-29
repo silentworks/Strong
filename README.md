@@ -1,6 +1,6 @@
 # Strong Authentication Package
 
-[![Build Status](https://travis-ci.org/jwest/Strong.png?branch=master)](https://travis-ci.org/jwest/Strong)
+[![Build Status](https://travis-ci.org/silentworks/Strong.png?branch=master)](https://travis-ci.org/silentworks/Strong)
 
 ## Changes
 - pdo driver needs pdo object instead of a connection string
