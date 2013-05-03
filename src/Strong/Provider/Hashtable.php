@@ -34,7 +34,7 @@ class Hashtable extends \Strong\Provider
      * @param string $username
      * @param string $password
      * @param bool $remember
-     * @return array|bool
+     * @return bool
      */
     public function login($username, $password, $remember = false)
     {
@@ -51,6 +51,7 @@ class Hashtable extends \Strong\Provider
                 )
             );
         }
+        return false;
     }
 
 }

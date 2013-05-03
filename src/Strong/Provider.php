@@ -91,11 +91,11 @@ abstract class Provider
      * Login and store user details in Session
      *
      * @param array $user
-     * @return array
+     * @return boolean
      */
     protected function completeLogin($user) {
         // Store session data
         $_SESSION['auth_user'] = $user;
-        return $user;
+        return true;
     }
 }

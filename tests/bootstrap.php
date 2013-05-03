@@ -1,9 +1,17 @@
 <?php
 session_start();
-set_include_path(dirname(__FILE__) . '/../' . PATH_SEPARATOR . get_include_path());
-date_default_timezone_set('Europe/Warsaw');
+date_default_timezone_set('UTC');
 
-require 'vendor/autoload.php';
+$vendorPos = strpos(__DIR__, 'vendor/slim/strong');
+if($vendorPos !== false) {
+    // Package has been cloned within another composer package, resolve path to autoloader
+    $vendorDir = substr(__DIR__, 0, $vendorPos) . 'vendor/';
+    require $vendorDir . 'autoload.php';
+} else {
+    // Package itself (cloned standalone)
+    require __DIR__.'/../vendor/autoload.php';
+}
+
 require 'tests/Strong/Provider/ProviderTesting.php';
 require 'tests/Mock/PDOMock.php';
 require 'tests/Mock/StmtMock.php';

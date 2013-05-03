@@ -47,17 +47,19 @@ class Activerecord extends \Strong\Provider
             && $user->password === $password) {
             return $this->completeLogin($user);
         }
+
+        return false;
     }
 
     /**
      * Login and store user details in Session
      *
      * @param object $user
-     * @return array
+     * @return boolean
      */
     protected function completeLogin($user)
     {
-        $users = $user;
+        $users = \User::find($user->id);
         $users->logins = $user->logins + 1;
         $users->last_login = time();
         $users->save();

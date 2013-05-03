@@ -25,7 +25,7 @@ class Strong_StrongTest extends PHPUnit_Framework_TestCase {
             $strong = new Strong(array('provider' => 'notExistProvider'));
             $this->fail();
         } catch(\Exception $e) {
-            $this->assertEquals('Strong is missing provider notExistProvider in Strong\Strong', $e->getMessage());
+            $this->assertEquals('Strong is missing provider \Strong\Provider\notExistProvider in Strong\Strong', $e->getMessage());
         }
     }
 
@@ -34,7 +34,7 @@ class Strong_StrongTest extends PHPUnit_Framework_TestCase {
             $strong = new Strong(array('provider' => 'invalid'));
             $this->fail();
         } catch(\Exception $e) {
-            $this->assertEquals('The current Provider invalid does not extend \Strong\Provider', $e->getMessage());
+            $this->assertEquals('The current Provider Strong\Provider\Invalid does not extend \Strong\Provider', $e->getMessage());
         }
     }
 

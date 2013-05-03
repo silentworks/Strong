@@ -15,7 +15,7 @@ class StmtMock extends \PDOStatement {
             'id' => 1,
             'username' => 'admin',
             'email' => 'admin',
-            'password' => '1a1dc91c907325c69271ddf0c944bc72',
+            'password' => password_hash('pass', PASSWORD_BCRYPT),
         );
     }
 

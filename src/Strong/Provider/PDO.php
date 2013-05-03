@@ -28,7 +28,7 @@ class PDO extends \Strong\Provider
     public function __construct($config)
     {
         parent::__construct($config);
-        $this->config = array_merge($this->settings, $this->config);
+        $this->config = array_merge($this->config, $config);
 
         if (!isset($this->config['pdo']) || !($this->config['pdo'] instanceof \PDO)) {
             throw new \InvalidArgumentException('You must add valid pdo connection object');
@@ -75,6 +75,7 @@ class PDO extends \Strong\Provider
         ) {
             return $this->completeLogin($user);
         }
+        return false;
     }
 
     /**
