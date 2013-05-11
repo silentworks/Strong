@@ -48,7 +48,9 @@ class Hashtable extends \Strong\Provider
             return false;
         }
 
-        if ($this->users[$username] === $password || $this->users[$username][$this->password_field] === $password) {
+        if ($this->users[$username] === $password || 
+            (is_array($this->users[$username]) && 
+            $this->users[$username][$this->password_field] === $password)) {
             return $this->completeLogin(
                 array(
                     'username' => $username,
