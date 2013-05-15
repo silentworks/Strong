@@ -8,6 +8,7 @@ class Hashtable extends \Strong\Provider
      * @var array
      */
     protected $users = array();
+    protected $password_field = 'password';
 
     /**
      * @param array $config
@@ -20,6 +21,10 @@ class Hashtable extends \Strong\Provider
             throw new \InvalidArgumentException('No declare users');
         }
         $this->users = $config['users'];
+        
+         if (array_key_exists('password_field', $config)) {
+            $password_field = $config['password_field'];
+        }
     }
 
     /**
@@ -43,7 +48,9 @@ class Hashtable extends \Strong\Provider
             return false;
         }
 
-        if ($this->users[$username] === $password) {
+        if ($this->users[$username] === $password || 
+            (is_array($this->users[$username]) && 
+            $this->users[$username][$this->password_field] === $password)) {
             return $this->completeLogin(
                 array(
                     'username' => $username,
