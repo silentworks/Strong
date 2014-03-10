@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Authentication Library with multiple drivers",
     "keywords": ["authentication","extensions"],
-    "homepage": "http://github.com/silentworks/Strong",
+    "homepage": "http://github.com/sonnybaker/Strong",
     "license": "MIT",
     "authors": [
         {
