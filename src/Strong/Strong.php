@@ -193,7 +193,7 @@ class Strong
     {
         $this->config = array_merge($this->config, $config);
         if(empty($this->config['session_key'])) {
-            $this->config['session_key'] = 'auth_user_'.$this->config['name']
+            $this->config['session_key'] = 'auth_user_'.$this->config['name'];
         }
         return $this;
     }
