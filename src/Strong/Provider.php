@@ -67,7 +67,7 @@ abstract class Provider
             session_destroy();
         } else {
             // Remove the user object from the session
-            $_SESSION['auth_user'] = array();
+            $_SESSION[$this->config['session_key']] = array();
         }
 
         // Double check
@@ -80,8 +80,8 @@ abstract class Provider
      * @return array|null
      */
     public function getUser() {
-        if(isset($_SESSION['auth_user']) && !empty($_SESSION['auth_user'])){
-            return $_SESSION['auth_user'];
+        if(isset($_SESSION[$this->config['session_key']]) && !empty($_SESSION[$this->config['session_key']])){
+            return $_SESSION[$this->config['session_key']];
         }
         return null;
     }
@@ -94,7 +94,7 @@ abstract class Provider
      */
     protected function completeLogin($user) {
         // Store session data
-        $_SESSION['auth_user'] = $user;
+        $_SESSION[$this->config['session_key']] = $user;
         return true;
     }
 }

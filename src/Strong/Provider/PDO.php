@@ -51,7 +51,7 @@ class PDO extends \Strong\Provider
      */
     public function loggedIn()
     {
-        return (isset($_SESSION['auth_user']) && !empty($_SESSION['auth_user']));
+        return (isset($_SESSION[$this->config['session_key']]) && !empty($_SESSION[$this->config['session_key']]));
     }
 
     /**
